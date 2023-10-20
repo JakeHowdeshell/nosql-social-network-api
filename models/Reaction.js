@@ -1,4 +1,5 @@
 const { Schema, Types } = require('mongoose');
+const formatDate = require('../utils/formatedDate');
 
 const reactionSchema = new Schema(
   {
@@ -18,6 +19,7 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (time) => formatDate(time),
     },
   },
   {
@@ -28,9 +30,6 @@ const reactionSchema = new Schema(
   }
 );
 
-reactionSchema.virtual('createdAt').formatTime.get(function () {
-    // need to write the code to format ***!!!
-    return this.createdAt.toDateString();
-});
+reactionSchema.set('toObject', { virtuals: true });
 
 module.exports = reactionSchema;
