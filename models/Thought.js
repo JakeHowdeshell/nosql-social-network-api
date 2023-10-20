@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const Reaction = require('./Reaction');
+const formatDate = require('../utils/formatedDate');
 
 // Schema to create Post model
 const thoughtsSchema = new Schema(
@@ -13,7 +14,7 @@ const thoughtsSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      // use a getter method to format the timestamp on query
+      get: (time) => formatDate(time),
     },
     username: {
       type: String,
@@ -24,15 +25,11 @@ const thoughtsSchema = new Schema(
   {
     toJSON: {
       virtuals: true,
+      getters: true,
     },
     id: false,
   }
 );
-
-thoughtsSchema.virtual('createdAt').formatTime.get(function () {
-    // need to write the code to format ***!!!
-    return this.createdAt.toDateString();
-});
 
 // Create a virtual property `reactionCount` that gets the amount of reactions associated with an application
 thoughtsSchema
